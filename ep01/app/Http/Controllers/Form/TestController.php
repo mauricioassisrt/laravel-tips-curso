@@ -51,8 +51,25 @@ class TestController extends Controller
             ['user' => $user]
         );
     }
-    public function edit()
+    public function edit(User $user, Request $request)
     {
-        # code...
+        //verifica se veio um email valido
+        if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+            $user->email = $request->email;
+        }
+        //verifica se a senha veio vazia
+        if (!empty($request->password)) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->name = $request->name;
+
+        $user->save();
+
+        return redirect()->route('users');
+    }
+    public function destroy(User $user)
+    {
+        $user->delete();
+        return redirect()->route('users');
     }
 }

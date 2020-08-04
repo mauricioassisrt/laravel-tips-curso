@@ -8,8 +8,10 @@
 </head>
 
 <body>
-    <form action="{{ route('users.edit',  ['user'=> $user->id]) }}" method="PUT">
+    <form action="{{ route('users.edit',  ['user'=> $user->id]) }}" method="post">
+        {{--  Metodo csrf token necessario   --}}
         @csrf
+        @method('PUT')
         <label for="">Nome </label>
         <input type="text" name="name" value="{{ $user->name }}">
 
