@@ -9,67 +9,96 @@ use Illuminate\Support\Facades\Hash;
 
 class TestController extends Controller
 {
-    public function listAllUsers()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
         $users = User::all();
-
-
-        return view(
-            'listAllUsers',
-            [
-                'users' => $users
-
-            ]
-        );
+        return view('listAllUsers', compact('users'));
     }
-    public function listUser(User $user)
-    {
-        return view(
-            'listaUsers',
-            ['user' => $user]
-        );
-    }
-    public function formAddUser()
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
         return view('addUser');
     }
-    public function storeUser(Request $request)
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
         $user = new User();
 
+        $dados = $request->all();
+        $dados['password'] = Hash::make($request->password);
+        $user::create($dados);
+
+        return redirect()->route('user.index');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function show(User $user)
+    {
+        return view('listaUsers', compact('user'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(User $user)
+    {
+        return view('editUser', compact('user'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, User $user)
+    {
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->save();
 
-        return redirect()->route('users');
-    }
-    public function formEditUser(User $user)
-    {
-        return view(
-            'editUser',
-            ['user' => $user]
-        );
-    }
-    public function edit(User $user, Request $request)
-    {
-        //verifica se veio um email valido
-        if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
-            $user->email = $request->email;
-        }
-        //verifica se a senha veio vazia
         if (!empty($request->password)) {
             $user->password = Hash::make($request->password);
         }
-        $user->name = $request->name;
 
         $user->save();
 
-        return redirect()->route('users');
+        return redirect()->route('user.index');
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\User  $user
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users');
+        return redirect()->route('user.index');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //altero e renomeio a rota padrão com nomes create e edit e altero para os nomes desejados
+        Route::resourceVerbs([
+            'create' => 'novo',
+            'edit' => 'editar'
+        ]);
     }
 }

@@ -24,7 +24,7 @@
             <td>{{ $item->name }}</td>
             <td>{{ $item->email }}</td>
             <td>
-                <a href="">Ver Usuarios</a>
+                <a href="{{ route('user.show', ['user'=> $item->id]) }}">Ver Usuarios</a>
                 {{--  ao ptrabalhar com delet utilizar  um form no button   --}}
                 <form action="{{ route('user.destroy', ['user'=> $item->id]) }}" method="POST">
                     @csrf
